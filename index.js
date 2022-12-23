@@ -8,6 +8,7 @@ import MyApp from './modal';
 import addView from './addview';
 import Dropdown from './dropDown';
 import MyApp111 from './deleteCom'
+import MyPage_1 from './refresh'
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,

@@ -12,7 +12,6 @@ const homepage_style = StyleSheet.create({
         marginTop:10,
         height:200,
         borderRadius:10,
-        
     }
 })
 

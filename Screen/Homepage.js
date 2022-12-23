@@ -25,7 +25,7 @@ function Homepage({ navigation }) {
                     onPress={() => { navigation.navigate('Living_room') }}
                 >
                     <ImageBackground source={require('../image/living_room.jpg')} resizeMode="cover" style={homepage_style.room1} imageStyle={{ borderRadius: 10 }}>
-                        <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0" }}>
+                        <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0" , borderRadius: 10 }}>
                             <Text style={{ fontSize: 30, color: '#FFFFFF', margin: 10, fontWeight: 'bold' }}>Living Room</Text>
                         </View>
                     </ImageBackground>
@@ -34,7 +34,7 @@ function Homepage({ navigation }) {
                     onPress={() => { navigation.navigate('Bedroom') }}
                 >
                     <ImageBackground source={require('../image/bedroom.jpg')} resizeMode="cover" style={homepage_style.room1} imageStyle={{ borderRadius: 10 }}>
-                        <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0" }}>
+                        <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0" , borderRadius: 10 }}>
                             <Text style={{ fontSize: 30, color: '#FFFFFF', margin: 10, fontWeight: 'bold' }}>Bed Room</Text>
                         </View>
                     </ImageBackground>
@@ -43,7 +43,7 @@ function Homepage({ navigation }) {
                     onPress={() => { navigation.navigate('Kitchen') }}
                 >
                     <ImageBackground source={require('../image/kitchen.jpg')} resizeMode="cover" style={homepage_style.room1} imageStyle={{ borderRadius: 10 }}>
-                        <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0" }}>
+                        <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0" , borderRadius: 10 }}>
                             <Text style={{ fontSize: 30, color: '#FFFFFF', margin: 10, fontWeight: 'bold' }}>Kitchen</Text>
                         </View>
                     </ImageBackground>
@@ -52,7 +52,7 @@ function Homepage({ navigation }) {
                     onPress={() => { navigation.navigate('Rest_room') }}
                 >
                     <ImageBackground source={require('../image/restroom.jpg')} resizeMode="cover" style={homepage_style.room1} imageStyle={{ borderRadius: 10 }}>
-                        <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0" }}>
+                        <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0" , borderRadius: 10 }}>
                             <Text style={{ fontSize: 30, color: '#FFFFFF', margin: 10, fontWeight: 'bold' }}>Rest Room</Text>
                         </View>
                     </ImageBackground>
