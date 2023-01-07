@@ -6,17 +6,37 @@ import { Picker } from '@react-native-picker/picker';
 import room_styles from '../css/room_styles';
 import axios from 'axios';
 import RNRestart from 'react-native-restart';
-
+import io from 'socket.io-client';
 const baseUrl = 'http://192.168.1.7:3000';
 
 function Living_room({ navigation }, props) {
+    const [humidity, setHumidity] = useState();
+    const [temparature, settemparature] = useState();
     const [confirm, setConfirm] = useState(0);
     const [selectedDevice, setSelectedDevice] = useState(1);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentDate, setCurrentDate] = useState('');
     const [views, setViews] = useState([]);
+    const [toggleColor, setToggleColor] = useState('white')
+    const [doorText, setDoortext] = useState('');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const [data, setData] = useState([]);
+    const socket = io('http://192.168.1.7:5000');
+
+    socket.on('status_sensor', (data) => {
+        setDoortext(data.status_door);
+        console.log(data.status_door)
+        if (data.status_door == 'OPEN') {
+            setToggleColor('red')
+        } else[
+            setToggleColor('white')
+        ]
+    });
+
+    socket.on('humidity_value', (data) => {
+        setHumidity(data.humudity_now)
+    })
+
     useEffect(() => {
         console.log("useEffect activated")
         var date = new Date().getDate();
@@ -24,7 +44,10 @@ function Living_room({ navigation }, props) {
         var year = new Date().getFullYear();
         setCurrentDate(date + ',' + monthName[month] + ' ' + year);
         get_room_devices();
+        console.log(1)
+        socket.emit('useState_test_emit', 'Hello node.js')
     }, []);
+
     const get_room_devices = () => {
         axios.get(`${baseUrl}/roll_data_room2`).then((response) => {
             console.log(response.data);
@@ -33,6 +56,7 @@ function Living_room({ navigation }, props) {
     }
 
     const addView = () => {
+
         setModalVisible(!modalVisible);
         const item = {
             room_id: 2,
@@ -72,6 +96,14 @@ function Living_room({ navigation }, props) {
             });
         // console.log(id)
     }
+
+    const before_navigate = () => {
+        const room_detail = {
+            room_id: 2,
+            room_name: 'Bed Room'
+        };
+        navigation.navigate('Humidity_page', room_detail);
+    }
     return (
         <View style={room_styles.container}>
             <Modal
@@ -94,32 +126,39 @@ function Living_room({ navigation }, props) {
                         <Picker.Item label="temperature" value={4} />
                     </Picker>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
-
                         <View style={{ flex: 1, backgroundColor: '#AEAEAE', justifyContent: 'center', alignItems: 'center', borderBottomLeftRadius: 10 }}>
                             <Text onPress={addView}>CONFIRM</Text>
                         </View>
                         <View style={{ flex: 1, backgroundColor: '#7F807F', justifyContent: 'center', alignItems: 'center', borderBottomRightRadius: 10 }}>
                             <Text onPress={() => { setModalVisible(!modalVisible); }}>CANCEL</Text>
                         </View>
-
                     </View>
                 </View>
 
             </Modal>
             <Text style={{ color: '#D0D0D0', marginBottom: 5, marginTop: 15, marginLeft: 15, fontSize: 20 }}>{currentDate}</Text>
-            <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 48, fontWeight: 'bold' }}>Bedroom</Text>
+            <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 48, fontWeight: 'bold' }}>Living Room</Text>
             <ScrollView>
                 <View>
                     {data.map((item) => (
                         item.name == 'Light bulb' ? (
                             <View key={item.id} style={room_styles.equipment_style} >
                                 <View style={{ backgroundColor: '#497E3C', flex: 6, borderRadius: 10 }}>
-                                    <View style={{ flex: 1, backgroundColor: 'red', margin: 12 }}>
+                                    <View style={{ flex: 1, margin: 12 }}>
                                         <Text style={{ fontSize: 35, color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: 'blue', margin: 12 }}>
-                                        <Switch key={item.id} >
-                                        </Switch>
+                                    <View style={{ flex: 1, margin: 5, flexDirection: 'row' }}>
+                                        <View style={{ backgroundColor: '#C6CDC6', flex: 1, margin: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                            <TouchableOpacity>
+                                                <Text>ON</Text>
+                                            </TouchableOpacity>
+                                        </View>
+
+                                        <View style={{ backgroundColor: '#868986', flex: 1, margin: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                            <TouchableOpacity>
+                                                <Text>OFF</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />
@@ -127,12 +166,12 @@ function Living_room({ navigation }, props) {
                         ) : item.name == 'Door sensor' ? (
                             <View key={item.id} style={room_styles.equipment_style} >
                                 <View style={{ backgroundColor: '#497E3C', flex: 6, borderRadius: 10 }}>
-                                    <View style={{ flex: 1, backgroundColor: 'red', margin: 12 }}>
+                                    <View style={{ flex: 1, margin: 12 }}>
                                         <Text style={{ fontSize: 35, color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: 'blue', margin: 12 }}>
-                                        <Switch key={item.id} >
-                                        </Switch>
+                                    <View style={{ flex: 1, margin: 12, flexDirection: 'row' }}>
+                                        <Text style={{ color: 'white', fontSize: 28, fontWeight: 'bold' }}>Status : </Text>
+                                        <Text style={{ color: toggleColor, fontSize: 28, fontWeight: 'bold' }}>{doorText}</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />
@@ -140,25 +179,32 @@ function Living_room({ navigation }, props) {
                         ) : item.name == 'Humidity' ? (
                             <View key={item.id} style={room_styles.equipment_style} >
                                 <View style={{ backgroundColor: '#497E3C', flex: 6, borderRadius: 10 }}>
-                                    <View style={{ flex: 1, backgroundColor: 'red', margin: 12 }}>
+                                    <View style={{ flex: 1, margin: 12 }}>
                                         <Text style={{ fontSize: 35, color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: 'blue', margin: 12 }}>
-                                        <Switch key={item.id} >
-                                        </Switch>
+                                    <View style={{ flex: 1, marginTop: 1, marginLeft: 12, flexDirection: 'row' }}>
+                                        <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}>Humidity now : </Text>
+                                        <Text style={{ color: toggleColor, fontSize: 25, fontWeight: 'bold' }}>{humidity} %</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate()}>View more...</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />
+
                             </View>
                         ) : (
                             <View key={item.id} style={room_styles.equipment_style} >
                                 <View style={{ backgroundColor: '#497E3C', flex: 6, borderRadius: 10 }}>
-                                    <View style={{ flex: 1, backgroundColor: 'red', margin: 12 }}>
+                                    <View style={{ flex: 1, margin: 12 }}>
                                         <Text style={{ fontSize: 35, color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: 'blue', margin: 12 }}>
-                                        <Switch key={item.id} >
-                                        </Switch>
+                                    <View style={{ flex: 1, marginTop: 1, marginLeft: 12, flexDirection: 'row' }}>
+                                        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Temparature now : </Text>
+                                        <Text style={{ color: toggleColor, fontSize: 20, fontWeight: 'bold' }}>{temparature} °C</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => { navigation.navigate('temperature_page') }}>View more...</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />

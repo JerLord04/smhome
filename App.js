@@ -5,13 +5,16 @@ import styles from './css/style';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Create_user from './Screen/CreatUser_page';
-import Login_page from './Screen/Login_page';
+// import Create_user from './Screen/CreatUser_page';
+// import Login_page from './Screen/Login_page';
 import Homepage from './Screen/Homepage';
 import Living_room from './Screen/Living_room_page';
 import Kitchen from './Screen/Kitchen_page';
 import Rest_room from './Screen/Restroom';
 import Bedroom from './Screen/Bedroom_page';
+import Humidity_page from './Screen/Humidity_page'
+import temperature_page from './Screen/Temparature_page';
+import test_rount from './Screen/test_rount';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,22 +61,31 @@ function MyStack() {
             backgroundColor: '#E76319',
           },
         }} />
-      <Stack.Screen name="Create_user" component={Create_user}
+      <Stack.Screen name="Humidity_page" component={Humidity_page}
         options={{
           title: '',
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: '#E1E8E8',
+            backgroundColor: '#E76319',
           },
         }} />
-      <Stack.Screen name="Login" component={Login_page}
+      <Stack.Screen name="temperature_page" component={temperature_page}
         options={{
           title: '',
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: '#E1E8E8',
+            backgroundColor: '#E76319',
           },
         }} />
+      <Stack.Screen name="test_rount" component={test_rount}
+        options={{
+          title: '',
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: '#E76319',
+          },
+        }} />
+
     </Stack.Navigator>
   );
 }

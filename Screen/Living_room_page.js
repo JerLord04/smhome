@@ -12,6 +12,7 @@ const baseUrl = 'http://192.168.1.7:3000';
 
 function Living_room({ navigation }, props) {
     const [humidity, setHumidity] = useState();
+    const [temparature, settemparature] = useState();
     const [confirm, setConfirm] = useState(0);
     const [selectedDevice, setSelectedDevice] = useState(1);
     const [modalVisible, setModalVisible] = useState(false);
@@ -47,13 +48,13 @@ function Living_room({ navigation }, props) {
         console.log(1)
         socket.emit('useState_test_emit', 'Hello node.js')
     }, []);
+
     const get_room_devices = () => {
         axios.get(`${baseUrl}/roll_data_room1`).then((response) => {
             console.log(response.data);
             setData(response.data);
         });
     }
-
 
     const addView = () => {
 
@@ -95,6 +96,14 @@ function Living_room({ navigation }, props) {
                 console.log(error);
             });
         // console.log(id)
+    }
+
+    const before_navigate = () => {
+        const room_detail = {
+            room_id: 1,
+            room_name : 'Living Room'
+        };
+        navigation.navigate('Humidity_page', room_detail);
     }
     return (
         <View style={room_styles.container}>
@@ -174,13 +183,12 @@ function Living_room({ navigation }, props) {
                                     <View style={{ flex: 1, margin: 12 }}>
                                         <Text style={{ fontSize: 35, color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
                                     </View>
-                                    <View style={{ flex: 1, margin: 12, flexDirection: 'row' }}>
+                                    <View style={{ flex: 1, marginTop: 1, marginLeft: 12, flexDirection: 'row' }}>
                                         <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}>Humidity now : </Text>
-                                        <Text style={{ color: toggleColor, fontSize: 25, fontWeight: 'bold' }}>{humidity} °C</Text>
-
+                                        <Text style={{ color: toggleColor, fontSize: 25, fontWeight: 'bold' }}>{humidity} %</Text>
                                     </View>
                                     <View>
-                                        <Text style={{ margin : 12,color: 'white', fontSize: 14 }} onPress={()=>{alert('Go to humidity page')}}>View more...</Text>
+                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate()}>View more...</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />
@@ -189,12 +197,15 @@ function Living_room({ navigation }, props) {
                         ) : (
                             <View key={item.id} style={room_styles.equipment_style} >
                                 <View style={{ backgroundColor: '#497E3C', flex: 6, borderRadius: 10 }}>
-                                    <View style={{ flex: 1, backgroundColor: 'red', margin: 12 }}>
+                                    <View style={{ flex: 1, margin: 12 }}>
                                         <Text style={{ fontSize: 35, color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: 'blue', margin: 12 }}>
-                                        <Switch key={item.id} >
-                                        </Switch>
+                                    <View style={{ flex: 1, marginTop: 1, marginLeft: 12, flexDirection: 'row' }}>
+                                        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Temparature now : </Text>
+                                        <Text style={{ color: toggleColor, fontSize: 20, fontWeight: 'bold' }}>{temparature} °C</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => { navigation.navigate('temperature_page') }}>View more...</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />
