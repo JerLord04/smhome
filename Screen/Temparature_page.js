@@ -68,17 +68,25 @@ function temperature_page({ navigation }) {
                     </View>
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         {
-                            temperatureValueNow >= 40 && temperatureValueNow <= 60 ? (
+                            temperatureValueNow >= 35 ? (
                                 <View>
-                                    <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 30 }}>Normality</Text>
+                                    <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 30 }}>Very Hot 🌡️</Text>
                                 </View>
-                            ) : temperatureValueNow <= 40 ? (
+                            ) : temperatureValueNow >= 30 ? (
                                 <View>
-                                    <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 30 }}>Low humidity</Text>
+                                    <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 30 }}>Hot 🔥</Text>
+                                </View>
+                            ) : temperatureValueNow >= 25 ? (
+                                <View>
+                                    <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 30 }}>Good weather ✨</Text>
+                                </View>
+                            ) : temperatureValueNow >= 20 ? (
+                                <View>
+                                    <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 30 }}>Cold 😰</Text>
                                 </View>
                             ) : (
                                 <View>
-                                    <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 30 }}>High humidity</Text>
+                                    <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 30 }}>Very cold 🥶</Text>
                                 </View>
                             )
                         }

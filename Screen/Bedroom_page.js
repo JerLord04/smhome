@@ -137,7 +137,7 @@ function Living_room({ navigation }, props) {
 
             </Modal>
             <Text style={{ color: '#D0D0D0', marginBottom: 5, marginTop: 15, marginLeft: 15, fontSize: 20 }}>{currentDate}</Text>
-            <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 48, fontWeight: 'bold' }}>Living Room</Text>
+            <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 48, fontWeight: 'bold' }}>Bed Room</Text>
             <ScrollView>
                 <View>
                     {data.map((item) => (

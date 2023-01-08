@@ -14,7 +14,6 @@ import Rest_room from './Screen/Restroom';
 import Bedroom from './Screen/Bedroom_page';
 import Humidity_page from './Screen/Humidity_page'
 import temperature_page from './Screen/Temparature_page';
-import test_rount from './Screen/test_rount';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,14 +69,6 @@ function MyStack() {
           },
         }} />
       <Stack.Screen name="temperature_page" component={temperature_page}
-        options={{
-          title: '',
-          headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: '#E76319',
-          },
-        }} />
-      <Stack.Screen name="test_rount" component={test_rount}
         options={{
           title: '',
           headerShadowVisible: false,
