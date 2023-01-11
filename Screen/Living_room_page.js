@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, Modal, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, Modal, Switch, TextInput, TouchableNativeFeedback } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Picker } from '@react-native-picker/picker';
@@ -11,6 +11,9 @@ const baseUrl = 'http://192.168.1.7:3000';
 
 
 function Living_room({ navigation }, props) {
+    const [value, onChangeText] = useState('');
+    const [changeNameModal, setChangeNameModal] = useState(false);
+    const [roomName, setRoomName] = useState('Living Room');
     const [humidity, setHumidity] = useState();
     const [temparature, settemparature] = useState();
     const [confirm, setConfirm] = useState(0);
@@ -18,9 +21,9 @@ function Living_room({ navigation }, props) {
     const [modalVisible, setModalVisible] = useState(false);
     const [currentDate, setCurrentDate] = useState('');
     const [views, setViews] = useState([]);
-    const [toggleColor, setToggleColor] = useState('white')
+    const [toggleColor, setToggleColor] = useState('white');
     const [doorText, setDoortext] = useState('');
-    const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+    const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     const [data, setData] = useState([]);
     const socket = io('http://192.168.1.7:5000');
 
@@ -119,6 +122,35 @@ function Living_room({ navigation }, props) {
             <Modal
                 animationType='slide'
                 transparent={true}
+                visible={changeNameModal}
+                onRequestClose={() => {
+                    setChangeNameModal(!changeNameModal);
+                }}
+            >
+                <View style={{ flex: 1, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: '#D9D9D9', width: 350, height: 150, borderRadius: 15 }}>
+                        <TextInput
+                            style={{ margin: 12, height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 15 }}
+                            placeholder="   Enter new name"
+                            onChangeText={text => onChangeText(text)}
+                            value={value}
+                        />
+                        <View style={{ flex: 1, marginTop: 30 }}>
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+                                <View style={{ flex: 1, backgroundColor: '#AEAEAE', borderBottomLeftRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text>CONFIRM</Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: '#7F807F', borderBottomRightRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text onPress={() => { setChangeNameModal(!changeNameModal); }}>CANCEL</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+            <Modal
+                animationType='slide'
+                transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
@@ -144,10 +176,17 @@ function Living_room({ navigation }, props) {
                         </View>
                     </View>
                 </View>
-
             </Modal>
             <Text style={{ color: '#D0D0D0', marginBottom: 5, marginTop: 15, marginLeft: 15, fontSize: 20 }}>{currentDate}</Text>
-            <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 48, fontWeight: 'bold' }}>Living Room</Text>
+            <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 48, fontWeight: 'bold' }}>{roomName}</Text>
+            <TouchableOpacity
+                onPress={() => { setChangeNameModal(true) }}
+            >
+                <View style={{ justifyContent: 'center', alignItems: 'center', margin: 12, width: 100, height: 25, backgroundColor: '#497E3C', borderRadius: 10 }}>
+                    <Text style={{ color: 'white' }}>Change name</Text>
+                </View>
+            </TouchableOpacity>
+
             <ScrollView>
                 <View>
                     {data.map((item) => (
