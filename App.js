@@ -13,7 +13,7 @@ import Kitchen from './Screen/Kitchen_page';
 import Rest_room from './Screen/Restroom';
 import Bedroom from './Screen/Bedroom_page';
 import Humidity_page from './Screen/Humidity_page'
-import temperature_page from './Screen/Temparature_page';
+import Temperature_page from './Screen/Temparature_page';
 
 const Stack = createNativeStackNavigator();
 
@@ -68,7 +68,7 @@ function MyStack() {
             backgroundColor: '#E76319',
           },
         }} />
-      <Stack.Screen name="temperature_page" component={temperature_page}
+      <Stack.Screen name="Temperature_page" component={Temperature_page}
         options={{
           title: '',
           headerShadowVisible: false,

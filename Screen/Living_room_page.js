@@ -98,13 +98,22 @@ function Living_room({ navigation }, props) {
         // console.log(id)
     }
 
-    const before_navigate = () => {
+    const before_navigate_homidity = () => {
         const room_detail = {
             room_id: 1,
-            room_name : 'Living Room'
+            room_name: 'Living Room'
         };
         navigation.navigate('Humidity_page', room_detail);
     }
+
+    const before_navigate_temparature = () => {
+        const room_detail = {
+            room_id: 1,
+            room_name: 'Living Room'
+        };
+        navigation.navigate('Temperature_page', room_detail);
+    }
+
     return (
         <View style={room_styles.container}>
             <Modal
@@ -188,7 +197,7 @@ function Living_room({ navigation }, props) {
                                         <Text style={{ color: toggleColor, fontSize: 25, fontWeight: 'bold' }}>{humidity} %</Text>
                                     </View>
                                     <View>
-                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate()}>View more...</Text>
+                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate_homidity()}>View more...</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />
@@ -205,7 +214,7 @@ function Living_room({ navigation }, props) {
                                         <Text style={{ color: toggleColor, fontSize: 20, fontWeight: 'bold' }}>{temparature} °C</Text>
                                     </View>
                                     <View>
-                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => { navigation.navigate('temperature_page') }}>View more...</Text>
+                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate_temparature()}>View more...</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />

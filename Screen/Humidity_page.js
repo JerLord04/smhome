@@ -14,7 +14,7 @@ function Humidity_page({ route, navigation }) {
     const previous_data = route.params;
     useEffect(() => {
         console.log("useEffect activated");
-        // read_humidity_data();
+        read_humidity_data();
         onRefresh();
         get_room_name();
     }, []);
@@ -59,7 +59,7 @@ function Humidity_page({ route, navigation }) {
             console.log(data_tmp);
             setData(data_tmp);
             setLabels(data_labels);
-            setHumidityValueNow(data_tmp[arraySize + 2])
+            setHumidityValueNow(data_tmp[4])
         })
     }
 
@@ -69,22 +69,10 @@ function Humidity_page({ route, navigation }) {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        read_humidity_data();
         // getHumidity_data();
         wait(1000).then(() => setRefreshing(false));
     }, []);
-
-    // const addValue = () => {
-    //     let random_num = Math.random() * 10;
-    //     let data_tmp = data;
-    //     let labels_tmp = labels;
-    //     let tmpShiftPoint1 = data_tmp.shift();
-    //     let tmpShiftPoint2 = labels_tmp.shift();
-    //     data_tmp.push(random_num);
-    //     labels_tmp.push("July");
-    //     setData(data_tmp);
-    //     setLabels(labels_tmp)
-    //     console.log(data);
-    // }
 
     return (
         <ScrollView refreshControl={
@@ -127,15 +115,15 @@ function Humidity_page({ route, navigation }) {
                             { data }
                         ]
                     }}
-                    width={Dimensions.get("window").width} // from react-native
+                    width={Dimensions.get("window").width} 
                     height={220}
                     yAxisSuffix="°C"
-                    yAxisInterval={1} // optional, defaults to 1
+                    yAxisInterval={1} 
                     chartConfig={{
                         backgroundColor: "#9AA09D",
                         backgroundGradientFrom: "#656565",
                         backgroundGradientTo: "#ffa726",
-                        decimalPlaces: 2, // optional, defaults to 2dp
+                        decimalPlaces: 2, 
                         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                         style: {

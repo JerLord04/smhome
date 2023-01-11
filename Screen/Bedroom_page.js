@@ -103,6 +103,15 @@ function Living_room({ navigation }, props) {
             room_name: 'Bed Room'
         };
         navigation.navigate('Humidity_page', room_detail);
+        
+    }
+
+    const before_navigate_temparature = () => {
+        const room_detail = {
+            room_id: 2,
+            room_name: 'Bed Room'
+        };
+        navigation.navigate('Temperature_page', room_detail);
     }
     return (
         <View style={room_styles.container}>
@@ -204,7 +213,7 @@ function Living_room({ navigation }, props) {
                                         <Text style={{ color: toggleColor, fontSize: 20, fontWeight: 'bold' }}>{temparature} °C</Text>
                                     </View>
                                     <View>
-                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => { navigation.navigate('temperature_page') }}>View more...</Text>
+                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate_temparature()}>View more...</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />
