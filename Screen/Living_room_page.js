@@ -48,13 +48,28 @@ function Living_room({ navigation }, props) {
         var year = new Date().getFullYear();
         setCurrentDate(date + ',' + monthName[month] + ' ' + year);
         get_room_devices();
+        get_room_name();
         console.log(1)
         socket.emit('useState_test_emit', 'Hello node.js')
     }, []);
 
+    const get_room_name = () => {
+        const room_data = {
+            room_id : 1
+        }
+        axios.post(`${baseUrl}/get_room_name`, room_data)
+            .then(response => {
+                console.log(response.data[0].name);
+                setRoomName(response.data[0].name);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
     const get_room_devices = () => {
         axios.get(`${baseUrl}/roll_data_room1`).then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             setData(response.data);
         });
     }
@@ -117,10 +132,29 @@ function Living_room({ navigation }, props) {
         navigation.navigate('Temperature_page', room_detail);
     }
 
+    const rename = () => {
+        const changeName = {
+            room_id: 1,
+            newname: value
+        }
+        axios.post(`${baseUrl}/update_room_name`, changeName).then(response => {
+            let testdata = response.data;
+            console.log(testdata);
+            alert(testdata.status);
+            setRoomName(testdata.newname);
+        }).catch(error => {
+            console.log(error);
+        });
+        console.log(changeName);
+        onChangeText('');
+        setChangeNameModal(!changeNameModal);
+
+    }
+
     return (
         <View style={room_styles.container}>
             <Modal
-                animationType='slide'
+                animationType='fade'
                 transparent={true}
                 visible={changeNameModal}
                 onRequestClose={() => {
@@ -138,7 +172,7 @@ function Living_room({ navigation }, props) {
                         <View style={{ flex: 1, marginTop: 30 }}>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <View style={{ flex: 1, backgroundColor: '#AEAEAE', borderBottomLeftRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text>CONFIRM</Text>
+                                    <Text onPress={rename}>CONFIRM</Text>
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#7F807F', borderBottomRightRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
                                     <Text onPress={() => { setChangeNameModal(!changeNameModal); }}>CANCEL</Text>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, Modal, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, Modal, Switch, TextInput, TouchableNativeFeedback } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Picker } from '@react-native-picker/picker';
@@ -10,6 +10,9 @@ import io from 'socket.io-client';
 const baseUrl = 'http://192.168.1.7:3000';
 
 function Restroom({ navigation }, props) {
+    const [value, onChangeText] = useState('');
+    const [changeNameModal, setChangeNameModal] = useState(false);
+    const [roomName, setRoomName] = useState('Rest Room');
     const [humidity, setHumidity] = useState();
     const [temparature, settemparature] = useState();
     const [confirm, setConfirm] = useState(0);
@@ -44,6 +47,7 @@ function Restroom({ navigation }, props) {
         var year = new Date().getFullYear();
         setCurrentDate(date + ',' + monthName[month] + ' ' + year);
         get_room_devices();
+        get_room_name();
         console.log(1)
         socket.emit('useState_test_emit', 'Hello node.js')
     }, []);
@@ -113,9 +117,71 @@ function Restroom({ navigation }, props) {
         navigation.navigate('Temperature_page', room_detail);
     }
 
-    
+    const rename = () => {
+        const changeName = {
+            room_id: 3,
+            newname: value
+        }
+        axios.post(`${baseUrl}/update_room_name`, changeName).then(response => {
+            let testdata = response.data;
+            console.log(testdata);
+            alert(testdata.status);
+            setRoomName(testdata.newname);
+        }).catch(error => {
+            console.log(error);
+        });
+        console.log(changeName);
+        onChangeText('');
+        setChangeNameModal(!changeNameModal);
+
+    }
+
+    const get_room_name = () => {
+        const room_data = {
+            room_id: 3
+        }
+        axios.post(`${baseUrl}/get_room_name`, room_data)
+            .then(response => {
+                console.log(response.data[0].name);
+                setRoomName(response.data[0].name);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+
     return (
         <View style={room_styles.container}>
+            <Modal
+                animationType='fade'
+                transparent={true}
+                visible={changeNameModal}
+                onRequestClose={() => {
+                    setChangeNameModal(!changeNameModal);
+                }}
+            >
+                <View style={{ flex: 1, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: '#D9D9D9', width: 350, height: 150, borderRadius: 15 }}>
+                        <TextInput
+                            style={{ margin: 12, height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 15 }}
+                            placeholder="   Enter new name"
+                            onChangeText={text => onChangeText(text)}
+                            value={value}
+                        />
+                        <View style={{ flex: 1, marginTop: 30 }}>
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+                                <View style={{ flex: 1, backgroundColor: '#AEAEAE', borderBottomLeftRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text onPress={rename}>CONFIRM</Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: '#7F807F', borderBottomRightRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text onPress={() => { setChangeNameModal(!changeNameModal); }}>CANCEL</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
             <Modal
                 animationType='slide'
                 transparent={true}
@@ -147,7 +213,14 @@ function Restroom({ navigation }, props) {
 
             </Modal>
             <Text style={{ color: '#D0D0D0', marginBottom: 5, marginTop: 15, marginLeft: 15, fontSize: 20 }}>{currentDate}</Text>
-            <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 48, fontWeight: 'bold' }}>Rest Room</Text>
+            <Text style={{ color: '#FFFFFF', marginLeft: 15, fontSize: 48, fontWeight: 'bold' }}>{roomName}</Text>
+            <TouchableOpacity
+                onPress={() => { setChangeNameModal(true) }}
+            >
+                <View style={{ justifyContent: 'center', alignItems: 'center', margin: 12, width: 100, height: 25, backgroundColor: '#497E3C', borderRadius: 10 }}>
+                    <Text style={{ color: 'white' }}>Change name</Text>
+                </View>
+            </TouchableOpacity>
             <ScrollView>
                 <View>
                     {data.map((item) => (
