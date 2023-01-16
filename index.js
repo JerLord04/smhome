@@ -10,7 +10,10 @@ import App from './App';
 // import MyApp111 from './deleteCom'
 // import MyPage_1 from './refresh'
 import Humidity_page from './Screen/Humidity_page'
-
+import Pintest from './Pintest';
+import CreatePin from './Screen/CreatePin';
+import ConfirmPin from './Screen/ConfirmPin';
+import Pin from './Screen/Pin';
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,
 // the environment is set up appropriately
