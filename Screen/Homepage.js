@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, ImageBackground,RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, ImageBackground, RefreshControl } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import homepage_style from '../css/homepage_style'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const baseUrl = 'http://192.168.1.7:3000';
 
 function Homepage({ navigation }) {
@@ -21,7 +22,26 @@ function Homepage({ navigation }) {
         var year = new Date().getFullYear();
         setCurrentDate(date + ',' + monthName[month] + ' ' + year);
         get_room_name();
+        checkToken();
     }), [];
+
+    const checkToken = async () => {
+        const token = await AsyncStorage.getItem('@accessToken')
+        const send_token = {
+            token: token
+        }
+        axios.post(`${baseUrl}/verifytoken`, send_token)
+            .then(response => {
+                console.log(response.data);
+                if (response.data.status === false) {
+                    navigation.navigate('Pin')
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        // console.log( "Token : " + token);
+    }
 
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
@@ -60,7 +80,10 @@ function Homepage({ navigation }) {
                 style={{ flex: 1, backgroundColor: '#000000' }}
             >
                 <TouchableOpacity
-                    onPress={() => { navigation.navigate('Living_room') }}
+                    onPress={() => {
+                        checkToken()
+                        navigation.navigate('Living_room')
+                    }}
                 >
                     <ImageBackground source={require('../image/living_room.jpg')} resizeMode="cover" style={homepage_style.room1} imageStyle={{ borderRadius: 10 }}>
                         <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0", borderRadius: 10 }}>
@@ -69,7 +92,10 @@ function Homepage({ navigation }) {
                     </ImageBackground>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => { navigation.navigate('Bedroom') }}
+                    onPress={() => {
+                        checkToken()
+                        navigation.navigate('Bedroom')
+                    }}
                 >
                     <ImageBackground source={require('../image/bedroom.jpg')} resizeMode="cover" style={homepage_style.room1} imageStyle={{ borderRadius: 10 }}>
                         <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0", borderRadius: 10 }}>
@@ -78,7 +104,10 @@ function Homepage({ navigation }) {
                     </ImageBackground>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => { navigation.navigate('Kitchen') }}
+                    onPress={() => {
+                        checkToken()
+                        navigation.navigate('Kitchen')
+                    }}
                 >
                     <ImageBackground source={require('../image/kitchen.jpg')} resizeMode="cover" style={homepage_style.room1} imageStyle={{ borderRadius: 10 }}>
                         <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0", borderRadius: 10 }}>
@@ -87,7 +116,10 @@ function Homepage({ navigation }) {
                     </ImageBackground>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => { navigation.navigate('Rest_room') }}
+                    onPress={() => {
+                        checkToken()
+                        navigation.navigate('Rest_room')
+                    }}
                 >
                     <ImageBackground source={require('../image/restroom.jpg')} resizeMode="cover" style={homepage_style.room1} imageStyle={{ borderRadius: 10 }}>
                         <View style={{ flex: 1, backgroundColor: "#9B9B9Bc0", borderRadius: 10 }}>
@@ -95,6 +127,7 @@ function Homepage({ navigation }) {
                         </View>
                     </ImageBackground>
                 </TouchableOpacity>
+                <Button title='Check Token' onPress={checkToken}></Button>
             </ScrollView>
         </View>
     );

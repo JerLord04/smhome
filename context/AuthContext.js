@@ -5,33 +5,20 @@ const baseUrl = 'http://192.168.1.7:3000';
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children, navigation }) => {
-
+export const AuthProvider = ({ children , navigation}) => {
     useEffect(() => {
         console.log("useEffect Auth Activated");
     }, [])
 
-    const testReturn = () => {
-        return 100;
-    }
+    // const gotoPin = () => {
+    //     navigation.navigate('Living_room')
+    // }
 
-    const callToken = (pinCode) => {
-        axios.post(`${baseUrl}/generate_token`, pinCode)
-            .then(async response => {
-                if (response.data.status == true) {
-                    await AsyncStorage.setItem('@accessToken', response.data.token)
-                    const accessToken = await AsyncStorage.getItem('@accessToken')
-                    console.log(accessToken);
-                } else {
-                    console.log(response.data); 
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
+    // const callToken = async (pinCode) => {
+
+    // }
     return (
-        <AuthContext.Provider value={{ callToken , testReturn}}>
+        <AuthContext.Provider value={{ }}>
             {children}
         </AuthContext.Provider>
     );

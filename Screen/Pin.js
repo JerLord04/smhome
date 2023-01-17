@@ -3,28 +3,49 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { KeycodeInput } from 'react-native-keycode'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {AuthContext} from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 const baseUrl = 'http://192.168.1.7:3000';
 
 
 
 const Pin = ({ navigation }) => {
-    const {callToken,testReturn} = useContext(AuthContext);
+
+    // const { gotoPin } = useContext(AuthContext);
+
     // useEffect(() => {
-    //   console.log(useContext(AuthContext));
+
     // }, [])
-    
+
+    const [token_asyn, setToken_asyn] = useState();
     const [value, setValue] = useState('');
     const [numeric, setNumeric] = useState(true);
+
+
+
     const completePin = (pinCode) => {
-        // let num = testReturn()
-        // console.log(num);
         const pin_datail = {
             pin_num: pinCode
         }
-        callToken(pin_datail)
-
+        axios.post(`${baseUrl}/generate_token`, pin_datail)
+            .then(async response => {
+                if (response.data.status == true) {
+                    await AsyncStorage.setItem('@accessToken', response.data.token)
+                    console.log(response.data.token);
+                    setValue('')
+                    navigation.navigate('Homepage')
+                    // alert("PIN code is conrrect")
+                } else {
+                    setValue('')
+                    console.log(response.data)
+                    alert("PIN code is inconrrect")
+                    // alert("PIN code is inconrrect")
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
+
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 20 }}>Enter your PIN code</Text>

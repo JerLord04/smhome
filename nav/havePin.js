@@ -8,6 +8,7 @@ import Bedroom from '../Screen/Bedroom_page';
 import Humidity_page from '../Screen/Humidity_page'
 import Temperature_page from '../Screen/Temparature_page';
 import Pin from '../Screen/Pin';
+import { AuthProvider } from '../context/AuthContext';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
@@ -69,6 +70,14 @@ const HavePin = () => {
                     },
                 }} />
             <Stack.Screen name="Temperature_page" component={Temperature_page}
+                options={{
+                    title: '',
+                    headerShadowVisible: false,
+                    headerStyle: {
+                        backgroundColor: '#E76319',
+                    },
+                }} />
+            <Stack.Screen name="AuthProvider" component={AuthProvider}
                 options={{
                     title: '',
                     headerShadowVisible: false,
