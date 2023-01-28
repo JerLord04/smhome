@@ -3,7 +3,8 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { KeycodeInput } from 'react-native-keycode'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-const baseUrl = 'http://192.168.1.7:3000';
+import {BASE_URL} from "@env"
+const baseUrl = BASE_URL;
 
 const ConfirmPin = ({ route, navigation }) => {
     const [value, setValue] = useState('');
@@ -16,7 +17,7 @@ const ConfirmPin = ({ route, navigation }) => {
             const pin_datail = {
                 pin_num: previous_data.pin_num
             }
-            axios.post(`${baseUrl}/insert_pin`,pin_datail)
+            axios.post(`${baseUrl}/pin/insert_pin`,pin_datail)
                 .then(response => {
                     console.log(response.data.txt);
                     navigation.navigate('Pin')

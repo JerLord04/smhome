@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, Modal, Switch, Dimensions, RefreshControl } from 'react-native';
 import { LineChart } from "react-native-chart-kit";
 import axios from 'axios';
-const baseUrl = 'http://192.168.1.7:5000';
-const baseUrl_host = 'http://192.168.1.7:3000';
+import {BASE_URL} from "@env"
+const baseUrl = BASE_URL;
 
 function Temperature_page({ route, navigation }) {
     const [roomName, setRoomname] = useState('No title')
@@ -23,7 +23,7 @@ function Temperature_page({ route, navigation }) {
 
     const read_temperature_data = () => {
         const data_tmp = route.params;
-        axios.get(`${baseUrl}/get_temperature_data`, {
+        axios.get(`${baseUrl}/dht/get_tem_data`, {
             headers: { 'Content-Type': 'application/json' },
             params: data_tmp,
         }).then(response => {
@@ -55,7 +55,7 @@ function Temperature_page({ route, navigation }) {
     const get_room_name = () => {
         const data_tmp = route.params;
 
-        axios.post(`${baseUrl_host}/get_room_name`, data_tmp)
+        axios.post(`${baseUrl}/room/get_room_name`, data_tmp)
             .then(response => {
                 console.log(response.data[0].name);
                 setRoomname(response.data[0].name);

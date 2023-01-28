@@ -7,7 +7,8 @@ import room_styles from '../css/room_styles';
 import axios from 'axios';
 import RNRestart from 'react-native-restart';
 import io from 'socket.io-client';
-const baseUrl = 'http://192.168.1.7:3000';
+import {BASE_URL} from "@env"
+const baseUrl = BASE_URL;
 
 function Living_room({ navigation }, props) {
     const [value, onChangeText] = useState('');
@@ -24,7 +25,7 @@ function Living_room({ navigation }, props) {
     const [doorText, setDoortext] = useState('');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const [data, setData] = useState([]);
-    const socket = io('http://192.168.1.7:5000');
+    const socket = io(BASE_URL);
 
     socket.on('status_sensor', (data) => {
         setDoortext(data.status_door);
@@ -67,7 +68,7 @@ function Living_room({ navigation }, props) {
             sensor_id: selectedDevice
         }
         console.log("Add Component Complete.");
-        axios.post(`${baseUrl}/insert_data`, item)
+        axios.post(`${baseUrl}/devices/insert_device`, item)
             .then(response => {
                 console.log(response.data.msg);
                 get_room_devices();
@@ -83,7 +84,7 @@ function Living_room({ navigation }, props) {
         const item_id = {
             room_id: id
         }
-        axios.post(`${baseUrl}/delete_device`, item_id)
+        axios.post(`${baseUrl}/devices/delete_device`, item_id)
             .then(response => {
                 let { status, meg } = response.data;
                 if (status) {
@@ -113,7 +114,7 @@ function Living_room({ navigation }, props) {
         const room_data = {
             room_id: 2
         }
-        axios.post(`${baseUrl}/get_room_name`, room_data)
+        axios.post(`${baseUrl}/room/get_room_name`, room_data)
             .then(response => {
                 console.log(response.data[0].name);
                 setRoomName(response.data[0].name);
@@ -135,7 +136,7 @@ function Living_room({ navigation }, props) {
             room_id: 2,
             newname: value
         }
-        axios.post(`${baseUrl}/update_room_name`, changeName).then(response => {
+        axios.post(`${baseUrl}/room/change_room_name`, changeName).then(response => {
             let testdata = response.data;
             console.log(testdata);
             alert(testdata.status);

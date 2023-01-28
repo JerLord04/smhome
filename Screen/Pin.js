@@ -4,7 +4,8 @@ import { KeycodeInput } from 'react-native-keycode'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-const baseUrl = 'http://192.168.1.7:3000';
+import {BASE_URL} from "@env"
+const baseUrl = BASE_URL;
 
 
 
@@ -26,7 +27,7 @@ const Pin = ({ navigation }) => {
         const pin_datail = {
             pin_num: pinCode
         }
-        axios.post(`${baseUrl}/generate_token`, pin_datail)
+        axios.post(`${baseUrl}/auth/generate_token`, pin_datail)
             .then(async response => {
                 if (response.data.status == true) {
                     await AsyncStorage.setItem('@accessToken', response.data.token)

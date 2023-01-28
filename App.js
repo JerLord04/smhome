@@ -5,6 +5,7 @@ import styles from './css/style';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+
 import axios from 'axios';
 
 // import Create_user from './Screen/CreatUser_page';
@@ -13,7 +14,7 @@ import HavePin from './nav/havePin';
 import UnPin from './nav/unPin';
 import { AuthProvider } from './context/AuthContext';
 
-const baseUrl = 'http://192.168.1.7:3000';
+const baseUrl = 'http://192.168.1.7:5000';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +25,7 @@ function MyStack() {
   }, [])
 
   const checkData = () => {
-    axios.get(`${baseUrl}/count_pin_data`).then((response) => {
+    axios.get(`${baseUrl}/pin/count_pin`).then((response) => {
       let num = response.data.count
       if (num > 0) {
         console.log(num);

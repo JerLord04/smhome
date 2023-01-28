@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, Modal, Switch, Dimensions, RefreshControl } from 'react-native';
 import { LineChart } from "react-native-chart-kit";
 import axios from 'axios';
-const baseUrl = 'http://192.168.1.7:5000';
-const baseUrl_host = 'http://192.168.1.7:3000';
+import {BASE_URL} from "@env"
+const baseUrl = BASE_URL;
 
 function Humidity_page({ route, navigation }) {
     const [roomName, setRoomname] = useState('No title')
@@ -22,7 +22,7 @@ function Humidity_page({ route, navigation }) {
     const get_room_name = () => {
         const data_tmp = route.params;
 
-        axios.post(`${baseUrl_host}/get_room_name`, data_tmp)
+        axios.post(`${baseUrl}/room/get_room_name`, data_tmp)
             .then(response => {
                 console.log(response.data[0].name);
                 setRoomname(response.data[0].name);
@@ -34,7 +34,7 @@ function Humidity_page({ route, navigation }) {
 
     const read_humidity_data = () => {
         const data_tmp = route.params;
-        axios.get(`${baseUrl}/get_humidity_data`, {
+        axios.get(`${baseUrl}/dht/get_humi_data/`, {
             headers: { 'Content-Type': 'application/json' },
             params: data_tmp,
         }).then(response => {
