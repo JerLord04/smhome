@@ -4,7 +4,7 @@ import { KeycodeInput } from 'react-native-keycode'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import {BASE_URL} from "@env"
+import { BASE_URL } from "@env"
 const baseUrl = BASE_URL;
 
 
@@ -13,9 +13,9 @@ const Pin = ({ navigation }) => {
 
     // const { gotoPin } = useContext(AuthContext);
 
-    // useEffect(() => {
-
-    // }, [])
+    useEffect(() => {
+        console.log(baseUrl);
+    }, [])
 
     const [token_asyn, setToken_asyn] = useState();
     const [value, setValue] = useState('');

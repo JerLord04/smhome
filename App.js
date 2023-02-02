@@ -13,8 +13,8 @@ import axios from 'axios';
 import HavePin from './nav/havePin';
 import UnPin from './nav/unPin';
 import { AuthProvider } from './context/AuthContext';
-
-const baseUrl = 'http://192.168.1.7:5000';
+import{BASE_URL} from '@env'
+const baseUrl = BASE_URL
 
 const Stack = createNativeStackNavigator();
 

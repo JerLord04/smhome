@@ -18,6 +18,7 @@ function Homepage({ navigation }) {
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const [refreshing, setRefreshing] = useState(false);
     useEffect(() => {
+        console.log(baseUrl);
         var date = new Date().getDate();
         var month = new Date().getMonth();
         var year = new Date().getFullYear();

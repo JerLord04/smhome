@@ -13,6 +13,7 @@ function Humidity_page({ route, navigation }) {
     const [refreshing, setRefreshing] = useState(false);
     const previous_data = route.params;
     useEffect(() => {
+        console.log(baseUrl);
         console.log("useEffect activated");
         read_humidity_data();
         onRefresh();

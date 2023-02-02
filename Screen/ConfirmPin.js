@@ -10,6 +10,7 @@ const ConfirmPin = ({ route, navigation }) => {
     const [value, setValue] = useState('');
     const [numeric, setNumeric] = useState(true);
     useEffect(() => {
+        console.log(baseUrl);
     }, [])
     const completePin = (pinCode) => {
         const previous_data = route.params;

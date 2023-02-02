@@ -43,6 +43,7 @@ function Living_room({ navigation }, props) {
     })
 
     useEffect(() => {
+        console.log(baseUrl);
         console.log("useEffect activated")
         var date = new Date().getDate();
         var month = new Date().getMonth();
