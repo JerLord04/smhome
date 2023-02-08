@@ -6,8 +6,7 @@ import homepage_style from '../css/homepage_style'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {BASE_URL} from "@env"
-const baseUrl = BASE_URL;
+import instance from '../createAxios';
 
 function Homepage({ navigation }) {
     const [livingroom_name, setLivingRoomName] = useState('Living Romm');
@@ -18,7 +17,6 @@ function Homepage({ navigation }) {
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const [refreshing, setRefreshing] = useState(false);
     useEffect(() => {
-        console.log(baseUrl);
         var date = new Date().getDate();
         var month = new Date().getMonth();
         var year = new Date().getFullYear();
@@ -32,7 +30,7 @@ function Homepage({ navigation }) {
         const send_token = {
             token: token
         }
-        axios.post(`${baseUrl}/auth/verify_token`, send_token)
+        instance.post('/auth/verify_token', send_token)
             .then(response => {
                 console.log(response.data);
                 if (response.data.status === false) {
@@ -56,7 +54,7 @@ function Homepage({ navigation }) {
     }, []);
 
     const get_room_name = () => {
-        axios.post(`${baseUrl}/room/get_all_room_name`)
+        instance.post('/room/get_all_room_name')
             .then(response => {
                 console.log(response.data);
                 setLivingRoomName(response.data[0].name);
@@ -68,8 +66,6 @@ function Homepage({ navigation }) {
                 console.log(error);
             });
     }
-
-
 
     const image = { uri: "https://reactjs.org/logo-og.png" };
     return (

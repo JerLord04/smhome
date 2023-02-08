@@ -4,18 +4,15 @@ import { KeycodeInput } from 'react-native-keycode'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import { BASE_URL } from "@env"
-const baseUrl = BASE_URL;
-
-
+import instance from '../createAxios';
 
 const Pin = ({ navigation }) => {
 
     // const { gotoPin } = useContext(AuthContext);
 
-    useEffect(() => {
-        console.log(baseUrl);
-    }, [])
+    // useEffect(() => {
+    //     console.log(baseUrl);
+    // }, [])
 
     const [token_asyn, setToken_asyn] = useState();
     const [value, setValue] = useState('');
@@ -27,7 +24,7 @@ const Pin = ({ navigation }) => {
         const pin_datail = {
             pin_num: pinCode
         }
-        axios.post(`${baseUrl}/auth/generate_token`, pin_datail)
+        instance.post('/auth/generate_token', pin_datail)
             .then(async response => {
                 if (response.data.status == true) {
                     await AsyncStorage.setItem('@accessToken', response.data.token)

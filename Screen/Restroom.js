@@ -7,8 +7,8 @@ import room_styles from '../css/room_styles';
 import axios from 'axios';
 import RNRestart from 'react-native-restart';
 import io from 'socket.io-client';
-import {BASE_URL} from "@env"
-const baseUrl = BASE_URL;
+import instance from '../createAxios';
+
 
 function Restroom({ navigation }, props) {
     const [value, onChangeText] = useState('');
@@ -22,19 +22,19 @@ function Restroom({ navigation }, props) {
     const [currentDate, setCurrentDate] = useState('');
     const [views, setViews] = useState([]);
     const [toggleColor, setToggleColor] = useState('white')
-    const [doorText, setDoortext] = useState('');
+    const [doorText, setDoortext] = useState('Null');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const [data, setData] = useState([]);
-    const socket = io(BASE_URL);
+    const socket = io();
 
-    socket.on('status_sensor', (data) => {
+    socket.on('door_status', (data) => {
         setDoortext(data.status_door);
-        console.log(data.status_door)
+        console.log(data.status_door);
         if (data.status_door == 'OPEN') {
-            setToggleColor('red')
-        } else[
-            setToggleColor('white')
-        ]
+            setToggleColor('red');
+        } else{
+            setToggleColor('white');
+        }
     });
 
     socket.on('humidity_value', (data) => {
@@ -54,7 +54,7 @@ function Restroom({ navigation }, props) {
     }, []);
 
     const get_room_devices = () => {
-        axios.get(`${baseUrl}/roll_data_room3`).then((response) => {
+        instance.get('/roll_data_room3').then((response) => {
             console.log(response.data);
             setData(response.data);
         });
@@ -68,7 +68,7 @@ function Restroom({ navigation }, props) {
             sensor_id: selectedDevice
         }
         console.log("Add Component Complete.");
-        axios.post(`${baseUrl}/devices/insert_device`, item)
+        instance.post('/devices/insert_device', item)
             .then(response => {
                 console.log(response.data.msg);
                 get_room_devices();
@@ -84,7 +84,7 @@ function Restroom({ navigation }, props) {
         const item_id = {
             room_id: id
         }
-        axios.post(`${baseUrl}/devices/delete_device`, item_id)
+        instance.post('/devices/delete_device', item_id)
             .then(response => {
                 let { status, meg } = response.data;
                 if (status) {
@@ -118,12 +118,18 @@ function Restroom({ navigation }, props) {
         navigation.navigate('Temperature_page', room_detail);
     }
 
+    const send_light_bulb_command = (status) => {
+        instance.get(`/api/light_bulb_command?status=${status}`).then(response => {
+            console.log(response.data);
+        })
+    }
+
     const rename = () => {
         const changeName = {
             room_id: 3,
             newname: value
         }
-        axios.post(`${baseUrl}/room/change_room_name`, changeName).then(response => {
+        instance.post('/room/change_room_name', changeName).then(response => {
             let testdata = response.data;
             console.log(testdata);
             alert(testdata.status);
@@ -141,7 +147,7 @@ function Restroom({ navigation }, props) {
         const room_data = {
             room_id: 3
         }
-        axios.post(`${baseUrl}/room/get_room_name`, room_data)
+        instance.post('/room/get_room_name', room_data)
             .then(response => {
                 console.log(response.data[0].name);
                 setRoomName(response.data[0].name);
@@ -233,13 +239,17 @@ function Restroom({ navigation }, props) {
                                     </View>
                                     <View style={{ flex: 1, margin: 5, flexDirection: 'row' }}>
                                         <View style={{ backgroundColor: '#C6CDC6', flex: 1, margin: 10, justifyContent: 'center', alignItems: 'center' }}>
-                                            <TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => { send_light_bulb_command('on') }}
+                                            >
                                                 <Text>ON</Text>
                                             </TouchableOpacity>
                                         </View>
 
                                         <View style={{ backgroundColor: '#868986', flex: 1, margin: 10, justifyContent: 'center', alignItems: 'center' }}>
-                                            <TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => { send_light_bulb_command('off') }}
+                                            >
                                                 <Text>OFF</Text>
                                             </TouchableOpacity>
                                         </View>

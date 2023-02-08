@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Button, ScrollView, Modal, Switch, Dimensions, RefreshControl } from 'react-native';
 import { LineChart } from "react-native-chart-kit";
 import axios from 'axios';
-import {BASE_URL} from "@env"
-const baseUrl = BASE_URL;
+import instance from '../createAxios';
 
 function Humidity_page({ route, navigation }) {
     const [roomName, setRoomname] = useState('No title')
@@ -13,7 +12,6 @@ function Humidity_page({ route, navigation }) {
     const [refreshing, setRefreshing] = useState(false);
     const previous_data = route.params;
     useEffect(() => {
-        console.log(baseUrl);
         console.log("useEffect activated");
         read_humidity_data();
         onRefresh();
@@ -23,7 +21,7 @@ function Humidity_page({ route, navigation }) {
     const get_room_name = () => {
         const data_tmp = route.params;
 
-        axios.post(`${baseUrl}/room/get_room_name`, data_tmp)
+        instance.post('/room/get_room_name', data_tmp)
             .then(response => {
                 console.log(response.data[0].name);
                 setRoomname(response.data[0].name);
@@ -35,7 +33,7 @@ function Humidity_page({ route, navigation }) {
 
     const read_humidity_data = () => {
         const data_tmp = route.params;
-        axios.get(`${baseUrl}/dht/get_humi_data/`, {
+        instance.get('/dht/get_t_h_value', {
             headers: { 'Content-Type': 'application/json' },
             params: data_tmp,
         }).then(response => {
@@ -54,7 +52,7 @@ function Humidity_page({ route, navigation }) {
             for (const k in res_tmp) {
                 let date = res_tmp[arraySize - k].date.split(' ');
                 data_labels.push(date[3]);
-                data_tmp.push(res_tmp[arraySize - k].value);
+                data_tmp.push(res_tmp[arraySize - k].hvalue);
             }
 
             console.log(data_tmp);
@@ -79,9 +77,10 @@ function Humidity_page({ route, navigation }) {
         <ScrollView refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-            style={{ flex: 1, backgroundColor: '#000000' }}
+            style={{ flex:1, backgroundColor: '#000000' }}
+            // contentContainerStyle = {{alignItems: 'center', justifyContent: 'center' }}
         >
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, justifyContent: 'center'}}>
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column' }}>
                         <Text style={{ color: '#FFFFFF', fontSize: 48, fontWeight: 'bold' }}>{roomName}</Text>
@@ -143,7 +142,7 @@ function Humidity_page({ route, navigation }) {
                         margin: 12
                     }}
                 />
-                <Button title='Test post' onPress={read_humidity_data}></Button>
+
             </View>
         </ScrollView>
     );
