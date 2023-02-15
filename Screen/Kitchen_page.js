@@ -25,7 +25,7 @@ function Kitchen({ navigation }, props) {
     const [doorText, setDoortext] = useState('');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const [data, setData] = useState([]);
-    const socket = io('http://192.168.1.43:3000');
+    const socket = io('http://192.168.1.7:3000');
 
     socket.on('door_status', (data) => {
         setDoortext(data.status_door);
@@ -37,9 +37,19 @@ function Kitchen({ navigation }, props) {
         ]
     });
 
-    socket.on('humidity_value', (data) => {
-        setHumidity(data.humudity_now)
+    socket.on('Update ht value_4', (data) => {
+        console.log(data);
+        setHumidity(data.hvalue);
+        settemparature(data.tvalue);
     })
+
+    const getLatestHTvalue = () => {
+        instance.get(`/dht/getLatestValue?room_id=4`).then((response) => {
+            console.log(response.data);
+            setHumidity(response.data[0].hvalue);
+            settemparature(response.data[0].tvalue);
+        })
+    }
 
     useEffect(() => {
         console.log("useEffect activated")
@@ -51,6 +61,7 @@ function Kitchen({ navigation }, props) {
         get_room_name();
         console.log(1)
         socket.emit('useState_test_emit', 'Hello node.js')
+        getLatestHTvalue();
     }, []);
 
     const rename = () => {
@@ -143,8 +154,14 @@ function Kitchen({ navigation }, props) {
         navigation.navigate('Humidity_page', room_detail);
     }
 
-    const send_light_bulb_command = (status) => {
-        instance.get(`/api/light_bulb_command?status=${status}`).then(response => {
+    const send_light_bulb_command_on = (status) => {
+        instance.get(`/api/light_bulb_command_on?status=${status}`).then(response => {
+            console.log(response.data);
+        })
+    }
+
+    const send_light_bulb_command_off = (status) => {
+        instance.get(`/api/light_bulb_command_off?status=${status}`).then(response => {
             console.log(response.data);
         })
     }
@@ -240,7 +257,7 @@ function Kitchen({ navigation }, props) {
                                         <View style={{ backgroundColor: '#C6CDC6', flex: 1, margin: 10, justifyContent: 'center', alignItems: 'center' }}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    send_light_bulb_command('on')
+                                                    send_light_bulb_command_on('light_bulb04')
                                                 }}
                                             >
                                                 <Text>ON</Text>
@@ -250,7 +267,7 @@ function Kitchen({ navigation }, props) {
                                         <View style={{ backgroundColor: '#868986', flex: 1, margin: 10, justifyContent: 'center', alignItems: 'center' }}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    send_light_bulb_command('off')
+                                                    send_light_bulb_command_off('light_bulb04')
                                                 }}
                                             >
                                                 <Text>OFF</Text>

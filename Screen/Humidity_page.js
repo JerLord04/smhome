@@ -17,6 +17,13 @@ function Humidity_page({ route, navigation }) {
         onRefresh();
         get_room_name();
     }, []);
+    
+    // const insertRoomDevice = () => {
+    //     const item = route.params;
+    //     instance.get(`/dht/insertRoomID?room_id=${item.room_id}`).then(response => {
+    //         console.log(response.data);
+    //     })
+    // }
 
     const get_room_name = () => {
         const data_tmp = route.params;

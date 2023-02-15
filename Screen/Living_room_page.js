@@ -24,21 +24,31 @@ function Living_room({ navigation }, props) {
     const [doorText, setDoortext] = useState('Null');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     const [data, setData] = useState([]);
-    const socket = io('http://192.168.1.43:3000');
+    const socket = io('http://192.168.1.7:3000');
 
     socket.on('door_status', (data) => {
         setDoortext(data.status_door);
         console.log(data.status_door);
         if (data.status_door == 'OPEN') {
             setToggleColor('red');
-        } else{
+        } else {
             setToggleColor('white');
         }
     });
 
-    socket.on('humidity_value', (data) => {
-        setHumidity(data.humudity_now)
+    socket.on('Update ht value_1', (data) => {
+        console.log(data);
+        setHumidity(data.hvalue);
+        settemparature(data.tvalue);
     })
+
+    const getLatestHTvalue = () => {
+        instance.get(`/dht/getLatestValue?room_id=1`).then((response) => {
+            console.log(response.data);
+            setHumidity(response.data[0].hvalue);
+            settemparature(response.data[0].tvalue);
+        })
+    }
 
     useEffect(() => {
         console.log("useEffect activated")
@@ -48,7 +58,8 @@ function Living_room({ navigation }, props) {
         setCurrentDate(date + ',' + monthName[month] + ' ' + year);
         get_room_devices();
         get_room_name();
-        console.log(1)
+        console.log(1);
+        getLatestHTvalue();
         socket.emit('useState_test_emit', 'Hello node.js')
     }, []);
 
@@ -79,7 +90,7 @@ function Living_room({ navigation }, props) {
             room_id: 1,
             sensor_id: selectedDevice
         }
-        console.log("Selcted number : "+selectedDevice);
+        console.log("Selcted number : " + selectedDevice);
         console.log("Add Component Complete.");
         instance.post('/devices/insert_device', item)
             .then(response => {
@@ -90,11 +101,12 @@ function Living_room({ navigation }, props) {
             .catch(error => {
                 console.error(error);
             });
-        if(selectedDevice == 3 || selectedDevice == 4){
+        if (selectedDevice == 3 || selectedDevice == 4) {
             instance.get(`/dht/insertRoomID?room_id=${item.room_id}`).then(response => {
                 console.log(response.data);
             })
         }
+        getLatestHTvalue();
     }
     socket.on('hello', (data) => {
         console.log(data);
@@ -139,8 +151,14 @@ function Living_room({ navigation }, props) {
         navigation.navigate('Temperature_page', room_detail);
     }
 
-    const send_light_bulb_command = (status) => {
-        instance.get(`/api/light_bulb_command?status=${status}`).then(response => {
+    const send_light_bulb_command_on = (status) => {
+        instance.get(`/api/light_bulb_command_on?status=${status}`).then(response => {
+            console.log(response.data);
+        })
+    }
+
+    const send_light_bulb_command_off = (status) => {
+        instance.get(`/api/light_bulb_command_off?status=${status}`).then(response => {
             console.log(response.data);
         })
     }
@@ -246,7 +264,7 @@ function Living_room({ navigation }, props) {
                                     <View style={{ flex: 1, margin: 5, flexDirection: 'row' }}>
                                         <View style={{ backgroundColor: '#C6CDC6', flex: 1, margin: 10, justifyContent: 'center', alignItems: 'center' }}>
                                             <TouchableOpacity
-                                                onPress={() => {send_light_bulb_command('on')}}
+                                                onPress={() => { send_light_bulb_command_on('light_bulb01') }}
                                             >
                                                 <Text>ON</Text>
                                             </TouchableOpacity>
@@ -254,7 +272,7 @@ function Living_room({ navigation }, props) {
 
                                         <View style={{ backgroundColor: '#868986', flex: 1, margin: 10, justifyContent: 'center', alignItems: 'center' }}>
                                             <TouchableOpacity
-                                                onPress={() => {send_light_bulb_command('off')}}
+                                                onPress={() => { send_light_bulb_command_off('light_bulb01') }}
                                             >
                                                 <Text>OFF</Text>
                                             </TouchableOpacity>
