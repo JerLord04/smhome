@@ -21,12 +21,12 @@ function Living_room({ navigation }, props) {
     const [currentDate, setCurrentDate] = useState('');
     const [views, setViews] = useState([]);
     const [toggleColor, setToggleColor] = useState('white');
-    const [doorText, setDoortext] = useState('Null');
+    const [doorText, setDoortext] = useState('');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     const [data, setData] = useState([]);
-    const socket = io('http://192.168.1.7:3000');
+    const socket = io('http://192.168.1.173:3000');
 
-    socket.on('door_status', (data) => {
+    socket.on('door_status1', (data) => {
         setDoortext(data.status_door);
         console.log(data.status_door);
         if (data.status_door == 'OPEN') {
@@ -41,6 +41,20 @@ function Living_room({ navigation }, props) {
         setHumidity(data.hvalue);
         settemparature(data.tvalue);
     })
+
+    const getLastestDoorState = () => {
+        instance.get(`/api/get_door_lastest_state?room_id=1`).then((response) => {
+            console.log(response.data[0].status);
+            if(response.data[0].status == 'door_open'){
+                setDoortext('OPEN')
+                setToggleColor('red');
+            }else if(response.data[0].status == 'door_close'){
+                setDoortext('CLOSE')
+                setToggleColor('white');
+            }
+            
+        })
+    }
 
     const getLatestHTvalue = () => {
         instance.get(`/dht/getLatestValue?room_id=1`).then((response) => {
@@ -61,6 +75,7 @@ function Living_room({ navigation }, props) {
         console.log(1);
         getLatestHTvalue();
         socket.emit('useState_test_emit', 'Hello node.js')
+        getLastestDoorState();
     }, []);
 
     const get_room_name = () => {
@@ -302,7 +317,7 @@ function Living_room({ navigation }, props) {
                                     </View>
                                     <View style={{ flex: 1, marginTop: 1, marginLeft: 12, flexDirection: 'row' }}>
                                         <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}>Humidity now : </Text>
-                                        <Text style={{ color: toggleColor, fontSize: 25, fontWeight: 'bold' }}>{humidity} %</Text>
+                                        <Text style={{  color: 'white', fontSize: 25, fontWeight: 'bold' }}>{humidity} %</Text>
                                     </View>
                                     <View>
                                         <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate_homidity()}>View more...</Text>
@@ -319,10 +334,10 @@ function Living_room({ navigation }, props) {
                                     </View>
                                     <View style={{ flex: 1, marginTop: 1, marginLeft: 12, flexDirection: 'row' }}>
                                         <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Temparature now : </Text>
-                                        <Text style={{ color: toggleColor, fontSize: 20, fontWeight: 'bold' }}>{temparature} °C</Text>
+                                        <Text style={{ color: 'white' , fontSize: 20, fontWeight: 'bold' }}>{temparature} °C</Text>
                                     </View>
                                     <View>
-                                        <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate_temparature()}>View more...</Text>
+                                        <Text style={{ color: 'white', margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate_temparature()}>View more...</Text>
                                     </View>
                                 </View>
                                 <Button onPress={() => deleteComponent(item.id)} title="Delete" />

@@ -25,9 +25,9 @@ function Kitchen({ navigation }, props) {
     const [doorText, setDoortext] = useState('');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const [data, setData] = useState([]);
-    const socket = io('http://192.168.1.7:3000');
+    const socket = io('http://192.168.1.173:3000');
 
-    socket.on('door_status', (data) => {
+    socket.on('door_status4', (data) => {
         setDoortext(data.status_door);
         console.log(data.status_door)
         if (data.status_door == 'OPEN') {
@@ -42,6 +42,19 @@ function Kitchen({ navigation }, props) {
         setHumidity(data.hvalue);
         settemparature(data.tvalue);
     })
+
+    const getLastestDoorState = () => {
+        instance.get(`/api/get_door_lastest_state?room_id=4`).then((response) => {
+            console.log(response.data[0].status);
+            if(response.data[0].status == 'door_open'){
+                setDoortext('OPEN')
+                setToggleColor('red');
+            }else if(response.data[0].status == 'door_close'){
+                setDoortext('CLOSE')
+                setToggleColor('white');
+            }
+        })
+    }
 
     const getLatestHTvalue = () => {
         instance.get(`/dht/getLatestValue?room_id=4`).then((response) => {

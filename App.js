@@ -13,8 +13,9 @@ import axios from 'axios';
 import HavePin from './nav/havePin';
 import UnPin from './nav/unPin';
 import { AuthProvider } from './context/AuthContext';
-import{BASE_URL} from '@env'
-const baseUrl = BASE_URL
+import instance from './createAxios';
+// import{BASE_URL} from '@env'
+// const baseUrl = BASE_URL
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +26,7 @@ function MyStack() {
   }, [])
 
   const checkData = () => {
-    axios.get(`${baseUrl}/pin/count_pin`).then((response) => {
+    instance.get(`/pin/count_pin`).then((response) => {
       let num = response.data.count
       if (num > 0) {
         console.log(num);
