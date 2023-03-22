@@ -25,7 +25,7 @@ function Living_room({ navigation }, props) {
     const [doorText, setDoortext] = useState('');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const [data, setData] = useState([]);
-    const socket = io("http://192.168.1.173:3000");
+    const socket = io("http://40.81.25.86:3000");
 
     socket.on('door_status2', (data) => {
         setDoortext(data.status_door);
@@ -76,6 +76,7 @@ function Living_room({ navigation }, props) {
         console.log(1)
         socket.emit('useState_test_emit', 'Hello node.js')
         getLatestHTvalue()
+        getLastestDoorState()
     }, []);
 
     const get_room_devices = () => {
@@ -307,7 +308,7 @@ function Living_room({ navigation }, props) {
                                     </View>
                                     <View style={{ flex: 1, marginTop: 1, marginLeft: 12, flexDirection: 'row' }}>
                                         <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}>Humidity now : </Text>
-                                        <Text style={{ color: toggleColor, fontSize: 25, fontWeight: 'bold' }}>{humidity} %</Text>
+                                        <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}>{humidity} %</Text>
                                     </View>
                                     <View>
                                         <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate()}>View more...</Text>
@@ -324,7 +325,7 @@ function Living_room({ navigation }, props) {
                                     </View>
                                     <View style={{ flex: 1, marginTop: 1, marginLeft: 12, flexDirection: 'row' }}>
                                         <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Temparature now : </Text>
-                                        <Text style={{ color: toggleColor, fontSize: 20, fontWeight: 'bold' }}>{temparature} °C</Text>
+                                        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>{temparature} °C</Text>
                                     </View>
                                     <View>
                                         <Text style={{ margin: 12, color: 'white', fontSize: 14 }} onPress={() => before_navigate_temparature()}>View more...</Text>

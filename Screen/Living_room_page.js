@@ -24,7 +24,7 @@ function Living_room({ navigation }, props) {
     const [doorText, setDoortext] = useState('');
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     const [data, setData] = useState([]);
-    const socket = io('http://192.168.1.173:3000');
+    const socket = io('http://40.81.25.86:3000');
 
     socket.on('door_status1', (data) => {
         setDoortext(data.status_door);

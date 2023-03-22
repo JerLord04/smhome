@@ -23,7 +23,7 @@ function Create_user({ navigation }) {
                 password: password
             };
             const userJson = JSON.stringify(data);
-            const res = await axios.post('http://192.168.1.173:3000', userJson, {
+            const res = await axios.post('http://40.81.25.86:3000', userJson, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
